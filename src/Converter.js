@@ -29,7 +29,8 @@ export default class Converter extends Component {
             });
     }
 
-    // Event handler for the conversion
+    // Event handler for the conversion BROKEN due to CORS policy
+    // https://q777nnrzpw.codesandbox.io/ WORKS here - 
     convertHandler = () => {
         if (this.state.fromCurrency !== this.state.toCurrency) {
             axios.get(`http://api.openrates.io/latest?base=${this.state.fromCurrency}&symbols=${this.state.toCurrency}`)
@@ -58,7 +59,7 @@ export default class Converter extends Component {
     render() {
         return (
             <div className="Converter">
-                <h2><span>Currency </span> Converter <span role="img" aria-label="money">&#x1f4b5;</span> </h2>
+                <h2><span>Currency </span> Converter 
                 <div className="Form">
                     <input
                         name="amount"

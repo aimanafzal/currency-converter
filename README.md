@@ -1,5 +1,7 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+NOTE: cross-domain issue blocks you from viewing at localhost:3000 - instead view it here: <a href="https://q777nnrzpw.codesandbox.io/"/>
+
 ## Available Scripts
 
 In the project directory, you can run:
