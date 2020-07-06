@@ -1,48 +1,73 @@
 import React, { Component } from "react";
 import axios from "axios";
 import './Converter.css';
+import config from './config/config.json'
 
 export default class Converter extends Component {
     state = {
         result: null,
         fromCurrency: "USD",
         toCurrency: "GBP",
-        amount: 1,
+        amount: 0,
         currencies: [],
+        internet: "Offline",
+        readOnly: true
     };
 
+    detectInternetConnection() {
+        if (navigator.onLine) {
+            this.setState({ internet: "Online", readOnly: false })
+            return "Online";
+        }
+        else {
+            this.setState({ internet: "Offline", readOnly: true })
+            return "Offline";
+        }
+    }
     // Initializes the currencies with values from the Openrates API
-    componentDidMount() {
-        axios
-            .get("https://api.openrates.io/latest")
-            .then(response => {
-                // Initialized with 'EUR' because the base currency is 'EUR'
-                // and it is not included in the response
+    async componentDidMount() {
+        try {
+            setInterval(async () => {
+                this.detectInternetConnection()
+            }, 30000);
+        } catch (e) {
+            console.log(e);
+        }
+
+        if (this.detectInternetConnection() === "Online") {
+
+            
+            var result = await axios.get(`${config.URL}`)
+            if (result) {
                 const currencyAr = ["EUR"]
-                for (const key in response.data.rates) {
+                for (const key in result.data.rates) {
                     currencyAr.push(key)
                 }
                 this.setState({ currencies: currencyAr.sort() })
-            })
-            .catch(err => {
-                console.log("Oops, something broke with GET in componentDidMount() - we've got a: ", err.message);
-            });
+            } else {
+                console.log("Oops, something broke with GET in componentDidMount() - we've got an error ");
+            }
+        }
     }
 
-    // Event handler for the conversion BROKEN due to CORS policy
-    // https://q777nnrzpw.codesandbox.io/ WORKS here - 
-    convertHandler = () => {
-        if (this.state.fromCurrency !== this.state.toCurrency) {
-            axios.get(`http://api.openrates.io/latest?base=${this.state.fromCurrency}&symbols=${this.state.toCurrency}`)
-                .then(response => {
-                    const result = this.state.amount * (response.data.rates[this.state.toCurrency]);
-                    this.setState({ result: result.toFixed(5) })
-                })
-                .catch(err => {
-                    console.log("Oops, something broke with GET in convertHandler() - we've got a: ", err.message);
-                });
-        } else {
-            this.setState({ result: "You can't convert the same currency!" })
+
+    convertHandler = async () => {
+        if (this.detectInternetConnection() === "Online") {
+            if (this.state.fromCurrency !== this.state.toCurrency) {
+
+                var result = await axios.get(`${config.URL}`)
+                if (result) {
+                    var data = result.data.rates
+                    var calculate = (this.state.amount * data[this.state.fromCurrency]) * data[this.state.toCurrency]
+                    this.setState({ result: calculate })
+                }
+                else {
+                    this.setState({ result: "You can't convert the same currency!" })
+                }
+
+            } else {
+                this.setState({ result: "You can't convert the same currency!" })
+            }
         }
     };
 
@@ -56,45 +81,57 @@ export default class Converter extends Component {
         }
     }
 
+    currencyFormat = (amount) => {
+        var formatter = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: this.state.toCurrency,
+        });
+
+        return formatter.format(amount);
+    }
+
     render() {
         return (
             <div className="Converter">
-                <h2><span>Currency </span> Converter 
-                <div className="Form">
-                    <input
-                        name="amount"
-                        type="text"
-                        value={this.state.amount}
-                        onChange={event =>
-                            this.setState({ amount: event.target.value })
-                        }>
-                    </input>
-
-                    <select
-                        name="from"
-                        onChange={(event) => this.selectHandler(event)}
-                        value={this.state.fromCurrency}>
-
-                        {this.state.currencies.map(cur => (
-                            <option key={cur}>{cur}</option>
-                        ))}
-                    </select>
-
-                    <select
-                        name="to"
-                        onChange={(event) => this.selectHandler(event)}
-                        value={this.state.toCurrency}>
-
-                        {this.state.currencies.map(cur => (
-                            <option key={cur}>{cur}</option>
-                        ))}
-                    </select>
-
-                    <button onClick={this.convertHandler}>Convert</button>
+                <div >
+                    Internet is {this.state.internet}
                 </div>
-                {this.state.result && 
-                    <h3>{this.state.result}</h3>
-                }
+
+                <h2><span>Currency </span> Converter
+                <div className="Form" >
+                        <input
+                            name="amount"
+                            type="text"
+                            value={this.state.amount}
+                            onChange={event =>
+                                this.setState({ amount: event.target.value })
+                            }
+                            onKeyDown={this.convertHandler}
+                            readOnly={this.state.readOnly}>
+                        </input>
+
+                        <select
+                            name="from"
+                            onChange={(event) => this.selectHandler(event)}
+                            value={this.state.fromCurrency} readOnly={this.state.readOnly}>
+
+                            {this.state.currencies.map((cur, index) => (
+                                <option key={index}>{cur}</option>
+                            ))}
+                        </select>
+
+                        <select
+                            name="to"
+                            onChange={(event) => this.selectHandler(event)}
+                            value={this.state.toCurrency} readOnly={this.state.readOnly}>
+
+                            {this.state.currencies.map((cur, index) => (
+                                <option key={index}>{cur}</option>
+                            ))}
+                        </select>
+                    </div>
+                    {this.state.toCurrency} = {this.currencyFormat(this.state.result)}
+                </h2>
             </div>
         );
     }

@@ -1,8 +1,39 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Project Description
 
-NOTE: cross-domain issue blocks you from viewing at localhost:3000 - instead view it here: <a href="https://q777nnrzpw.codesandbox.io/"/>
+A currency converter which converts to desired currency on real time with real time exchange rates.
+It includes auto detection of internet, if you are connected to internet then it allows to use the application. Otherwise the application goes to read-only mode
+The project utilizes ExchangeRate-API https://open.exchangerate-api.com/v6/latest
+
+There are multiple APIs which could be utilized but their supported currencies are limited, few of them are listed below:
+
+1. 1Forge provides a good amount of currency list but does not covers all currencies
+
+2. Currencylayer provides a good amount of currency list but does not covers all currencies
+
+3. Czech National Bank provides a good amount of currency list but does not covers all currencies
+
+4. Fixer.io provides a good amount of currency list but does not covers all currencies
+
+5. Exchangeratesapi.io provides a good amount of currency list but does not covers all currencies
+
+6. Frankfurter provides a good amount of currency list with history but does not covers all currencies
+
+7. Ratesapi provides a good amount of currency list with history but does not covers all currencies
+
+You can also utilize these APIs if you are considering to fetch older exchange rates but the currency support is again limited. 
+
+You can utilize a separate server to make GET or POST calls based on your selection but you have to take care of Latency issue whereas Axios within ReactJS itself is robust for 
+this project. 
+
+
+## Project Hosting
+The project is hosted on Firebase and can be accessed here -> https://deca-games.web.app/
+
+If you want to deploy the build by yourself on Firebase then you can follow the documentation here -> https://firebase.google.com/docs/cli?authuser=0#mac-linux-npm
 
 ## Available Scripts
+Please Install all the Packages first by using 
+### 'npm i'
 
 In the project directory, you can run:
 
@@ -16,8 +47,7 @@ You will also see any lint errors in the console.
 
 ### `npm test`
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+You can test the components by running npm test 
 
 ### `npm run build`
 
@@ -26,45 +56,3 @@ It correctly bundles React in production mode and optimizes the build for the be
 
 The build is minified and the filenames include the hashes.<br>
 Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
